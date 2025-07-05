@@ -11,14 +11,14 @@ def stream_users_in_batches(batch_size):
         batch = cursor.fetchmany(batch_size)
         if not batch:
             break
-        yield [dict(row) for row in batch]  # yield list of dicts
+        yield [dict(row) for row in batch]
 
     cursor.close()
     connection.close()
 
-
 def batch_processing(batch_size):
-    for batch in stream_users_in_batches(batch_size):  # loop 1
-        for user in batch:  # loop 2
-            if user["age"] > 25:  # condition, not a loop
+    for batch in stream_users_in_batches(batch_size):
+        for user in batch:
+            if user["age"] > 25:
                 print(user)
+
