@@ -2,6 +2,7 @@
 def fetch_all_users():
     # This is a placeholder for the actual database fetching logic
     # In practice, this function should interact with your database to return user records
+    query = "SELECT * FROM user_data"
     return [
         {'user_id': '00234e50-34eb-4ce2-94ec-26e3fa749796', 'name': 'Dan Altenwerth Jr.', 'email': 'Molly59@gmail.com', 'age': 67},
         {'user_id': '006bfede-724d-4cdd-a2a6-59700f40d0da', 'name': 'Glenda Wisozk', 'email': 'Miriam21@gmail.com', 'age': 119},
