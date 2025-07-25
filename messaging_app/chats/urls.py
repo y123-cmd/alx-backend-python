@@ -1,6 +1,7 @@
 from django.urls import path, include
 from .views import ConversationViewSet, MessageViewSet
 from rest_framework_nested.routers import NestedDefaultRouter 
+from rest_framework import routers
 from rest_framework.routers import DefaultRouter
 from .auth import (
     RegisterUserAPIView,
@@ -9,7 +10,7 @@ from .auth import (
 )
 
 
-router = DefaultRouter()
+router = routers.DefaultRouter()
 router.register(r'conversations', ConversationViewSet, basename='conversation')
 
 nested_router = NestedDefaultRouter(router, r'conversations', lookup='conversation')
