@@ -8,7 +8,7 @@ from unittest.mock import patch, Mock
 # Adjust sys.path to import from parent directory
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from utils import access_nested_map, get_json, memoize
+from utils import access_nested_map, get_json, memoize  # noqa: E402
 
 
 class TestAccessNestedMap(unittest.TestCase):
