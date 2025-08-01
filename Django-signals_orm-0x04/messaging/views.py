@@ -27,3 +27,12 @@ def send_message(request):
     users = User.objects.exclude(id=request.user.id)
     return render(request, 'messaging/send_message.html', {'users': users})
 
+@login_required
+def inbox(request):
+    
+    messages = Message.objects.filter(receiver=request.user) \
+        .select_related('sender', 'parent_message') \
+        .prefetch_related('replies') \
+        .order_by('-timestamp')  
+
+    return render(request, 'messaging/inbox.html', {'messages': messages})
