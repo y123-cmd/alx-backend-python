@@ -8,8 +8,18 @@ class Message(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     edited = models.BooleanField(default=False)
 
-    def __str__(self):
-        return f'Message from {self.sender} to {self.receiver}'
+    def save(self, *args, **kwargs):
+        editor = kwargs.pop('editor', None)  
+        if self.pk:
+            old = Message.objects.get(pk=self.pk)
+            if old.content != self.content:
+                self.edited = True
+                MessageHistory.objects.create(
+                    message=self,
+                    old_content=old.content,
+                    edited_by=editor
+                )
+        super().save(*args, **kwargs)
 
 class Notification(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
@@ -24,6 +34,8 @@ class MessageHistory(models.Model):
     message = models.ForeignKey(Message, on_delete=models.CASCADE, related_name='history')
     old_content = models.TextField()
     edited_at = models.DateTimeField(auto_now_add=True)
+    edited_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
-        return f'History of message ID {self.message.id}'
+        return f'Edit by {self.edited_by} on message ID {self.message.id}'
+
