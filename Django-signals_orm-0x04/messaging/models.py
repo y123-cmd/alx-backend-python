@@ -7,6 +7,13 @@ class Message(models.Model):
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
     edited = models.BooleanField(default=False)
+    parent_message = models.ForeignKey(
+        'self',
+       null=True,
+       blank=True,
+       related_name='replies',
+       on_delete=models.CASCADE
+)
 
     def save(self, *args, **kwargs):
         editor = kwargs.pop('editor', None)  
@@ -20,6 +27,13 @@ class Message(models.Model):
                     edited_by=editor
                 )
         super().save(*args, **kwargs)
+
+def get_all_replies(self):
+        replies = []
+        for reply in self.replies.all():
+            replies.append(reply)
+            replies.extend(reply.get_all_replies())
+        return replies
 
 class Notification(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
