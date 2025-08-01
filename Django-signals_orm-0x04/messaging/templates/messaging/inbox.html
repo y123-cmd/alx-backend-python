@@ -1,0 +1,16 @@
+<h2>Inbox</h2>
+<ul>
+  {% for message in messages %}
+    <li>
+      <strong>{{ message.sender.username }}</strong>: {{ message.content }}<br>
+      <small>{{ message.timestamp }}</small>
+      {% if message.replies.all %}
+        <ul>
+          {% for reply in message.replies.all %}
+            <li><strong>{{ reply.sender.username }}</strong>: {{ reply.content }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </li>
+  {% endfor %}
+</ul>
