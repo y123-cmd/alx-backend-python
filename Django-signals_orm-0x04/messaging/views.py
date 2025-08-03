@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from .models import Message
+from django.views.decorators.cache import cache_page
 
 @login_required
 def send_message(request):
@@ -39,3 +40,7 @@ def inbox(request):
 def user_inbox(request):
     unread_messages = Message.unread.unread_for_user(request.user).only('id', 'sender', 'content', 'timestamp')
     return render(request, 'messaging/inbox.html', {'unread_messages': unread_messages})
+@cache_page(60)  # Cache the view for 60 seconds
+def conversation_messages(request, conversation_id):
+    messages = Message.objects.filter(conversation_id=conversation_id)
+    return render(request, 'messaging/conversation.html', {'messages': messages})
