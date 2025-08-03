@@ -9,11 +9,15 @@ class Message(models.Model):
     edited = models.BooleanField(default=False)
     parent_message = models.ForeignKey(
         'self',
-       null=True,
-       blank=True,
-       related_name='replies',
-       on_delete=models.CASCADE
-)
+        null=True,
+        blank=True,
+        related_name='replies',
+        on_delete=models.CASCADE
+    )
+    read = models.BooleanField(default=False)  
+
+    objects = models.Manager()  
+    unread = None  
 
     def save(self, *args, **kwargs):
         editor = kwargs.pop('editor', None)  
@@ -28,7 +32,7 @@ class Message(models.Model):
                 )
         super().save(*args, **kwargs)
 
-def get_all_replies(self):
+    def get_all_replies(self):
         replies = []
         for reply in self.replies.all():
             replies.append(reply)
@@ -52,4 +56,12 @@ class MessageHistory(models.Model):
 
     def __str__(self):
         return f'Edit by {self.edited_by} on message ID {self.message.id}'
+
+
+class UnreadMessagesManager(models.Manager):
+    def for_user(self, user):
+        return self.get_queryset().filter(receiver=user, read=False).only('id', 'sender', 'content', 'timestamp')
+
+
+Message.unread = UnreadMessagesManager()
 
