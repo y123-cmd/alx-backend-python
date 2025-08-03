@@ -66,3 +66,4 @@ class UnreadMessagesManager(models.Manager):
 
 Message.unread = UnreadMessagesManager()
 
+

@@ -36,3 +36,6 @@ def inbox(request):
         .order_by('-timestamp')  
 
     return render(request, 'messaging/inbox.html', {'messages': messages})
+def user_inbox(request):
+    unread_messages = Message.unread.unread_for_user(request.user)
+    return render(request, 'messaging/inbox.html', {'unread_messages': unread_messages})
