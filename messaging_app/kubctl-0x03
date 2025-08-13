@@ -1,0 +1,35 @@
+#!/bin/bash
+# kubctl-0x03 - Perform rolling update on blue deployment and test availability
+
+set -e
+
+DEPLOYMENT="messaging-app-blue"
+SERVICE_NAME="messaging-app-service"
+SERVICE_PORT=8000
+
+echo "Applying updated blue deployment..."
+kubectl apply -f messaging_app/blue_deployment.yaml
+
+echo "Monitoring rollout status..."
+kubectl rollout status deployment "$DEPLOYMENT"
+
+echo "Fetching service URL..."
+SERVICE_URL=$(minikube service "$SERVICE_NAME" --url | head -n 1)
+
+if [ -z "$SERVICE_URL" ]; then
+    echo "Could not retrieve service URL. Is the service exposed?"
+    exit 1
+fi
+
+echo "Testing for downtime during rollout..."
+for i in {1..20}; do
+    if curl -s --max-time 2 "$SERVICE_URL" > /dev/null; then
+        echo "[$(date +%H:%M:%S)] Service is UP"
+    else
+        echo "[$(date +%H:%M:%S)] Service is DOWN!"
+    fi
+    sleep 1
+done
+
+echo "Verifying current pods..."
+kubectl get pods -l app=messaging-app,version=blue -o wide
