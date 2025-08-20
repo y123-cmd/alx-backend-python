@@ -1,3 +1,4 @@
+
 aiosqlite==0.21.0
 asgiref==3.9.1
 certifi==2025.7.14
@@ -26,3 +27,6 @@ requests==2.32.4
 sqlparse==0.5.3
 typing_extensions==4.14.1
 urllib3==2.5.0
+=======
+pytest
+
