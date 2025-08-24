@@ -1,3 +1,4 @@
+# kubeservice.yaml
 apiVersion: v1
 kind: Service
 metadata:
@@ -5,7 +6,7 @@ metadata:
 spec:
   selector:
     app: messaging-app
-    version: blue # Change to green to switch traffic
+    version: blue   # 🔄 Change to "green" when switching traffic
   ports:
     - protocol: TCP
       port: 8000
